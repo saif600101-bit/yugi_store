@@ -27,7 +27,7 @@ if (!basePath) {
 }
 
 export default defineConfig({
-  base:​'/yugi_store/',
+  base: ​'/yugi_store/',
 
 
   plugins: [
