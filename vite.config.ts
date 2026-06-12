@@ -27,7 +27,9 @@ if (!basePath) {
 }
 
 export default defineConfig({
-  base: basePath,
+  base:​'/yugi_store/',
+
+
   plugins: [
     react(),
     tailwindcss(),
