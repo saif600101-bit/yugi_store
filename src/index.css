@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-slate-950 text-white antialiased;
+  }
+}
+
+/* Smooth transitions */
+@layer components {
+  .transition {
+    @apply duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-4 py-2 rounded-lg font-semibold transition;
+  }
+
+  .btn-secondary {
+    @apply border border-purple-500/50 hover:bg-purple-500/10 px-4 py-2 rounded-lg font-semibold transition;
+  }
+
+  .card {
+    @apply bg-gradient-to-br from-slate-800 to-slate-900 border border-purple-500/30 rounded-lg hover:border-purple-500/60 transition;
+  }
+
+  .glass {
+    @apply bg-black/40 backdrop-blur-md;
+  }
+}
