@@ -1,61 +1,60 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-
-const rawPort = process.env.PORT || "5173"; // Default for production
-const port = Number(rawPort);
-
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import path from 'path'
 
 export default defineConfig({
-  base: '/yugi_store/', // GitHub Pages base path
+  // GitHub Pages subdirectory base path - critical for asset resolution
+  base: '/yugi_store/',
 
   plugins: [
     react(),
     tailwindcss(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer({
-              root: path.resolve(import.meta.dirname, ".."),
-            }),
-          ),
-          await import("@replit/vite-plugin-dev-banner").then((m) =>
-            m.devBanner(),
-          ),
-        ]
-      : []),
   ],
+
   resolve: {
     alias: {
-      "@": path.resolve(import.meta.dirname, "src"),
-      "@assets": path.resolve(import.meta.dirname, "..", "..", "attached_assets"),
+      '@': path.resolve(import.meta.dirname, 'src'),
     },
-    dedupe: ["react", "react-dom"],
+    dedupe: ['react', 'react-dom'],
   },
-  root: path.resolve(import.meta.dirname),
+
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    // Output directory must be 'dist' for GitHub Pages workflow compatibility
+    outDir: 'dist',
+    // Internal assets subdirectory
+    assetsDir: 'assets',
+    // Empty the output directory before building
     emptyOutDir: true,
-  },
-  server: {
-    port,
-    strictPort: true,
-    host: "0.0.0.0",
-    allowedHosts: true,
-    fs: {
-      strict: true,
+    // Optimize chunk sizes
+    chunkSizeWarningLimit: 1000,
+    // Enable CSS code splitting for better caching
+    cssCodeSplit: true,
+    // Prevent small files from being inlined as base64
+    assetsInlineLimit: 4096,
+    // Source maps for production debugging (optional)
+    sourcemap: false,
+    // Configure rollup options for optimization
+    rollupOptions: {
+      output: {
+        // Ensure consistent asset naming
+        entryFileNames: 'assets/[name].[hash].js',
+        chunkFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash].[ext]',
+      },
     },
   },
-  preview: {
-    port,
-    host: "0.0.0.0",
+
+  server: {
+    port: 5173,
+    strictPort: false,
+    host: '0.0.0.0',
     allowedHosts: true,
   },
-});
+
+  preview: {
+    port: 5173,
+    host: '0.0.0.0',
+    allowedHosts: true,
+  },
+})
